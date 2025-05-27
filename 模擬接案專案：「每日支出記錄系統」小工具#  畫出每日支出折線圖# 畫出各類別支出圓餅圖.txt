@@ -1,0 +1,171 @@
+
+
+
+這是一個符合「真實外包案」特徵的小專案，難度適中、能學到重點，並能繼續擴充變成作品集。
+
+📜 專案情境
+你是一位自由接案工程師，客戶 A 跟你說：
+
+「我每天都記帳，但用 Excel 很不方便。我希望能有一個簡單的小工具，讓我輸入每天花了什麼錢，然後可以統計出：
+
+每天花了多少
+
+哪一類花最多
+
+畫一張圖看趨勢
+
+我不會裝什麼軟體，能跑 Python 就好。」
+
+✅ 你要做的事：
+1.讀入客戶提供的記帳檔案（CSV 格式）
+
+2.計算：
+
+。每日總支出
+
+。各類別總支出
+
+3.加分功能（選做）：
+
+。做出漂亮的支出折線圖
+
+。讓使用者輸入新花費後自動寫入檔案
+
+📂 客戶提供的檔案（expenses.csv 範例內容）
+image.png
+
+日期 類別 金額 備註 2025-05-20 飲食 120 早餐 2025-05-20 交通 60 搭捷運 2025-05-21 飲食 200 午餐+晚餐 2025-05-21 日用品 150 買洗髮精
+
+🧠 學到的重點
+image-2.png
+
+主題 技能訓練 檔案處理 open, csv, pandas 資料處理與邏輯 資料統計、分類、累加 視覺化（選做） matplotlib、seaborn 自訂流程與功能 實作一個「小功能工具」 使用者互動（進階） 用 input() 讓使用者輸入資料
+
+📌 開發步驟建議（可慢慢練）
+1.先手動做出一份 expenses.csv
+
+2.寫一段程式把檔案讀進來並印出內容
+
+3.統計每日金額、類別金額
+
+4.加上簡單的 matplotlib 圖表
+
+5.寫一個「讓使用者新增記帳」的小功能（選做）
+
+6.把程式整理成一個 .py 檔或 .ipynb 筆記本
+
+🛠 範例畫面想像（輸出）
+image-3.png
+
+makefile 複製 編輯 📅 每日支出統計： 2025-05-20: 180 元 2025-05-21: 350 元
+
+📂 類別支出統計： 飲食: 320 元 交通: 60 元 日用品: 150 元
+
+🟩 加上圖表（選做）會像這樣：
+。X 軸是日期
+
+。Y 軸是金額
+
+。每個類別用不同顏色折線圖顯示
+
+
+
+
+================================我(思考-解題過程)======================================
+見題目
+
+題目要求我...
+
+1.讀入客戶提供的記帳檔案（CSV 格式）
+
+2.計算：
+
+。每日總支出
+
+。各類別總支出
+
+3.加分功能（選做）：
+
+。做出漂亮的支出折線圖
+
+。讓使用者輸入新花費後自動寫入檔案
+
+
+1.輸入端:
+
+
+2.輸出端:
+
+
+????????????????????????????????我看到了要怎麼推演??????????????????????????????????????
+
+架聯想電塔:
+
+
+1.因為前面的東西是重複之前(記帳加總器)只是後面會嘗試製圖，所以前面一樣
+
+import csv
+from collections import defaultdict
+import matplotlib.pyplot as plt
+plt.rcParams['font.sans-serif'] = ['Microsoft JhengHei']  # 顯示中文
+plt.rcParams['axes.unicode_minus'] = False                # 顯示負號
+
+# 初始化資料結構
+daily_total = defaultdict(int)
+category_total = defaultdict(int)
+
+# 開啟CSV檔案
+with open('expenses.csv', newline='', encoding='big5') as csvfile:
+    reader = csv.DictReader(csvfile)
+    
+    for row in reader:
+        date = row['日期']
+        category = row['類別']
+        amount = int(row['金額'])  # 轉成整數
+        
+        # 累加
+        daily_total[date] += amount  # daily_total[date] = daily_total[date] + amount
+        category_total[category] += amount  # category_total[category] = category_total[category] + amount
+
+# 顯示結果
+print("📅 每日總支出：")
+for date, total in daily_total.items():   #根據日期來加  #用,item把key與value組成一個(資料對)
+    print(f"{date}: {total} 元")
+
+print("\n📂 各類別總支出：")
+for category, total in category_total.items():   #根據類別來加
+    print(f"{category}: {total} 元")
+
+#=====================================================================
+
+# 🎨 畫出每日支出折線圖
+dates = list(daily_total.keys())
+amounts = list(daily_total.values())
+
+plt.figure(figsize=(10, 5))
+plt.plot(dates, amounts, marker='o', linestyle='-', color='blue')
+plt.title('每日總支出')
+plt.xlabel('日期')
+plt.ylabel('金額 (元)')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.grid(True)
+plt.show()
+
+# 🎨 畫出各類別支出圓餅圖
+labels = list(category_total.keys())
+sizes = list(category_total.values())
+
+plt.figure(figsize=(6, 6))
+plt.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90)
+plt.title('各類別支出比例')
+plt.axis('equal')  # 讓圓餅圖是圓的
+plt.show()
+    
+    
+===========================================師=====================================
+
+
+
+
+==============================GPT=======================================
